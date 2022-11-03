@@ -19,7 +19,7 @@ const getCollection = async () => {
   if(!mongoClient.isConnected) {
     throw new Error('mongo not connected')
   }
-  const db = mongoClient.db(config.mongo.dbName);
+  const db = mongoClient.db();
   return db.collection('descriptions');
 }
 
@@ -27,7 +27,9 @@ const http = require("http");
 
 const context = new AudioContext
 
-const storage = new Storage();
+const storage = new Storage({
+  credentials: config.storage.credentials
+});
 const bucket = storage.bucket(config.storage.bucketName);
 
 
