@@ -9,7 +9,6 @@ const config = require('./config')
 const deepgram = new Deepgram(config.deepgram.key);
 const mongoClient = new MongoClient(config.mongo.url, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
 });
 
 const connectToDb = async () => {
