@@ -7,7 +7,11 @@ const Lame = require("node-lame").Lame;
 const { Storage } = require('@google-cloud/storage');
 const config = require('./config')
 const deepgram = new Deepgram(config.deepgram.key);
-const mongoClient = new MongoClient(config.mongo.url);
+const mongoClient = new MongoClient(config.mongo.url, {
+  useCreateIndex: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 const connectToDb = async () => {
   await mongoClient.connect();
@@ -19,7 +23,7 @@ const getCollection = async () => {
   if(!mongoClient.isConnected) {
     throw new Error('mongo not connected')
   }
-  const db = mongoClient.db();
+  const db = mongoClient.db('admin');
   return db.collection('descriptions');
 }
 
