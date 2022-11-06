@@ -180,3 +180,5 @@ const main = async () => {
 }
 
 main()
+
+// mongodb+srv://doadmin:8K3eAQ41s79p5yw@db-mongodb-fra1-47643-62051875.mongo.ondigitalocean.com/admin?tls=true&authSource=admin&replicaSet=db-mongodb-fra1-47643
