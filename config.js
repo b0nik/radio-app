@@ -25,7 +25,7 @@ module.exports = {
     maxPeak: 0.05,
     threshold: 0.02,
   },
-  soundUrl: process.env.SOUND_URL || 'http://192.168.88.249:8000/radio2',
+  soundUrl: process.env.SOUND_URL || 'http://192.168.88.249:8000/radio1',
   radioId: process.env.RADIO_ID || 'radio2',
   deepgram: {
     key: process.env.DEEPGRAM_KEY || 'fd74d5ecaf5c062977dcf130d70f0ac0e8b402b3'

@@ -148,7 +148,7 @@ function validateSound(pcmdata) {
 }
 
 const main = async () => {
-  await connectToDb();
+  // await connectToDb();
   let data = [];
   setInterval(() => {
     const buff = Buffer.concat(data);
