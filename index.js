@@ -144,11 +144,11 @@ function validateSound(pcmdata) {
   let max = 0;
   for(let i = 0; i < pcmdata.length ; i++){
     const pcmdataPeack = pcmdata[i].toFixed(1);
-    if( pcmdataPeack > config.soundFilter.maxPeak && pcmdataPeack < 1) count += 1
+    if( pcmdataPeack > config.soundFilter.maxPeak) count += 1
     max = pcmdata[i] > max ? pcmdata[i].toFixed(1)  : max ;
   }
   console.log('peaks', Date(), count, pcmdata.length, count/pcmdata.length, max);
-  return (count/pcmdata.length) > config.soundFilter.threshold;
+  return (count/pcmdata.length) > config.soundFilter.threshold && max < 1;
 }
 
 const main = async () => {
