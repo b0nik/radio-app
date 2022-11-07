@@ -154,6 +154,7 @@ const main = async () => {
   setInterval(() => {
     const buff = Buffer.concat(data);
     save.pipe(buff);
+    console.log('chunk piped')
     data = []
   }, config.aggregator.chunkTime)
   const req = http.get(config.soundUrl,{
