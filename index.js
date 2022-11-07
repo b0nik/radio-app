@@ -78,7 +78,7 @@ class Saver {
 
   async pipe(chunk) {
     const decodedBuffer = await decodeBufferData(chunk);
-    // console.log(decodedBuffer.length, chunk.length)
+    console.log(decodedBuffer.length, chunk.length)
     // if(decodedBuffer && decodedBuffer.length/chunk.length > 0.9)  {
     if(decodedBuffer)  {
       context.decodeAudioData(decodedBuffer, (audioBuffer) => {
