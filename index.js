@@ -143,7 +143,8 @@ function validateSound(pcmdata) {
   let count = 0;
   let max = 0;
   for(let i = 0; i < pcmdata.length ; i++){
-    if(pcmdata[i].toFixed(1) > config.soundFilter.maxPeak) count += 1
+    const pcmdataPeack = pcmdata[i].toFixed(1);
+    if( pcmdataPeack > config.soundFilter.maxPeak && pcmdataPeack < 1) count += 1
     max = pcmdata[i] > max ? pcmdata[i].toFixed(1)  : max ;
   }
   console.log('peaks', Date(), count, pcmdata.length, count/pcmdata.length, max);
