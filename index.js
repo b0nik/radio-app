@@ -80,7 +80,6 @@ class Saver {
     const decodedBuffer = await decodeBufferData(chunk);
     // if(decodedBuffer && decodedBuffer.length/chunk.length > 0.9)  {
     if(decodedBuffer)  {
-      console.log(decodedBuffer.length, chunk.length)
       context.decodeAudioData(decodedBuffer, (audioBuffer) => {
         const pcmdata = (audioBuffer.getChannelData(0)) ;
         const samplerate = audioBuffer.sampleRate;
@@ -116,22 +115,22 @@ const saveToBucket = async (buff, filename) => {
 const writeFile = (buff) => {
   const filename = `${Date.now()}.mp3`;
   const url = `https://storage.cloud.google.com/${config.storage.bucketName}/${filename}`;
-    saveToBucket(buff, filename)
-    .then(async () => {
-      console.log(url)
-      return takeWords(buff)
-    })
+
+    takeWords(buff)
     .then((words) => {
       console.log(words);
-      return saveToDb(
-        {
-          url,
-          words,
-          radioId: config.radioId,
-          createdAt: moment().toISOString(),
-          from: moment().subtract(config.aggregator.bufferTimeInterval, "milliseconds").toISOString(),
-          to: moment().toISOString()
-        })
+      if(words.length) return Promise.all([
+        saveToBucket(buff, filename),
+        saveToDb(
+          {
+            url,
+            words,
+            radioId: config.radioId,
+            createdAt: moment().toISOString(),
+            from: moment().subtract(config.aggregator.bufferTimeInterval, "milliseconds").toISOString(),
+            to: moment().toISOString()
+          })
+      ]);
     })
     .catch(console.log);
 }
