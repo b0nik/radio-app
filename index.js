@@ -12,9 +12,14 @@ const mongoClient = new MongoClient(config.mongo.url, {
   useUnifiedTopology: true
 });
 
+const log = {
+  log: (args) => console.log(`${config.radioId} -`, args),
+  error: (args) => console.error(`${config.radioId} -`, args)
+}
+
 const connectToDb = async () => {
   await mongoClient.connect();
-  console.log('Connected successfully to server');
+  log.log('Connected successfully to server');
   mongoClient.isConnected  = true;
 }
 
@@ -50,8 +55,8 @@ const decodeBufferData = async (chunk) => {
     await encoder.encode()
     return encoder.getBuffer();
   } catch (e) {
-    console.log(e);
-    console.log(chunk);
+    log.log(e);
+    log.log(chunk);
     return null;
   }
 }
@@ -65,14 +70,13 @@ class Saver {
   }
 
   async closeStreams() {
-    console.log('close');
     try {
       if(!this.buffer.length) return;
       const data = await decodeBufferData(Buffer.concat(this.buffer));
       writeFile(data)
       this.buffer = [];
     } catch (e) {
-      console.log(e);
+      log.log(e);
     }
   }
 
@@ -84,7 +88,7 @@ class Saver {
         const pcmdata = (audioBuffer.getChannelData(0)) ;
         const samplerate = audioBuffer.sampleRate;
         if(validateSound(pcmdata, samplerate)) this.buffer.push(chunk);
-      }, console.log)
+      }, log.log)
     }
   }
 }
@@ -118,7 +122,7 @@ const writeFile = (buff) => {
 
     takeWords(buff)
     .then((words) => {
-      console.log(words);
+      log.log(words);
       if(words.length) return Promise.all([
         saveToBucket(buff, filename),
         saveToDb(
@@ -132,7 +136,7 @@ const writeFile = (buff) => {
           })
       ]);
     })
-    .catch(console.log);
+    .catch(log.log);
 }
 
 
@@ -146,7 +150,7 @@ function validateSound(pcmdata) {
     if( pcmdataPeack > config.soundFilter.maxPeak) count += 1
     max = pcmdata[i] > max ? pcmdata[i].toFixed(1)  : max ;
   }
-  console.log('peaks', Date(), count, pcmdata.length, count/pcmdata.length, max);
+  log.log('peaks', Date(), count, pcmdata.length, count/pcmdata.length, max);
   return (count/pcmdata.length) > config.soundFilter.threshold && max < 1;
 }
 
@@ -156,7 +160,7 @@ const main = async () => {
   setInterval(() => {
     const buff = Buffer.concat(data);
     save.pipe(buff);
-    console.log('chunk piped')
+    log.log('chunk piped')
     data = []
   }, config.aggregator.chunkTime)
   const req = http.get(config.soundUrl,{
@@ -169,16 +173,16 @@ const main = async () => {
       data.push(chunk)
     });
     res.on('end', () => {
-      console.log('No more data in response.');
+      log.log('No more data in response.');
     });
     res.on('error', (e) => {
-      console.log('error', e);
+      log.log('error', e);
     });
   });
 
 
   req.on('error', (e) => {
-    console.error(`problem with request: ${e.message}`);
+    log.error(`problem with request: ${e.message}`);
     main()
   });
 }
