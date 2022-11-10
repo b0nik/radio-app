@@ -13,8 +13,8 @@ const mongoClient = new MongoClient(config.mongo.url, {
 });
 
 const log = {
-  log: (args) => console.log(`${config.radioId} -`, args),
-  error: (args) => console.error(`${config.radioId} -`, args)
+  log: (...args) => console.log(`${config.radioId} -`, ...args),
+  error: (...args) => console.error(`${config.radioId} -`, ...args)
 }
 
 const connectToDb = async () => {
